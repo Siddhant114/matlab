@@ -1,0 +1,15 @@
+clc; clear; close all;
+s = tf('s');
+G_s = 2 / (s*(s + 3));
+T1 = 0.2;
+T2 = 1.8;
+G_z1 = c2d(G_s, T1, 'zoh');
+G_z2 = c2d(G_s, T2, 'zoh');
+disp('Pulse Transfer Function G(z) at T = 0.2 s:'); disp(G_z1);
+CL_cont = feedback(G_s, 1);
+CL_disc1 = feedback(G_z1, 1);
+CL_disc2 = feedback(G_z2, 1);
+figure;
+step(CL_cont, 'k-', CL_disc1, 'b--', CL_disc2, 'r:', 12);
+legend('Continuous System', 'Discrete (T = 0.2 s - Stable)', 'Discrete (T = 1.8 s - Unstable/Oscillatory)');
+grid on; title('Effect of Sampling Time T on Closed-Loop Step Response');

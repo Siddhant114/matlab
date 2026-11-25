@@ -1,0 +1,16 @@
+clc; clear; close all;
+A = [0 1; -4 -2];
+B = [0; 1];
+C = [1 0];
+D = [0];
+poles = [-3, -5];
+K = acker(A, B, poles);
+A_cl = A - B*K;
+N_bar = -1 / (C * inv(A_cl) * B);
+fprintf('Gain K = [%.2f, %.2f], Pre-compensator N_bar = %.2f\n', K(1), K(2), N_bar);
+sys_unscaled = ss(A_cl, B, C, D);
+sys_scaled = ss(A_cl, B*N_bar, C, D);
+figure;
+step(sys_unscaled, 'r--', sys_scaled, 'b-', 3);
+legend('Without N_{bar} (Steady-State Error)', 'With N_{bar} (Zero Steady-State Error)');
+grid on; title('Unit Step Tracking with Pre-Compensator N_{bar}');
